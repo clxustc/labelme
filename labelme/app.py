@@ -126,7 +126,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.labelList.itemChanged.connect(self.labelItemChanged)
         self.labelList.itemDropped.connect(self.labelOrderChanged)
         self.shape_dock = QtWidgets.QDockWidget(
-            self.tr("Polygon Labels"), self
+            "多边形标签clx", self
         )
         self.shape_dock.setObjectName("Labels")
         self.shape_dock.setWidget(self.labelList)
@@ -144,12 +144,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.uniqLabelList.addItem(item)
                 rgb = self._get_rgb_by_label(label)
                 self.uniqLabelList.setItemLabel(item, label, rgb)
-        self.label_dock = QtWidgets.QDockWidget(self.tr("Label List"), self)
+        self.label_dock = QtWidgets.QDockWidget("标签列表clx", self)
         self.label_dock.setObjectName("Label List")
         self.label_dock.setWidget(self.uniqLabelList)
 
         self.fileSearch = QtWidgets.QLineEdit()
-        self.fileSearch.setPlaceholderText(self.tr("Search Filename"))
+        self.fileSearch.setPlaceholderText("按文件名检索clx")
         self.fileSearch.textChanged.connect(self.fileSearchChanged)
         self.fileListWidget = QtWidgets.QListWidget()
         self.fileListWidget.itemSelectionChanged.connect(
@@ -160,7 +160,7 @@ class MainWindow(QtWidgets.QMainWindow):
         fileListLayout.setSpacing(0)
         fileListLayout.addWidget(self.fileSearch)
         fileListLayout.addWidget(self.fileListWidget)
-        self.file_dock = QtWidgets.QDockWidget(self.tr("File List"), self)
+        self.file_dock = QtWidgets.QDockWidget("文件列表clx", self)
         self.file_dock.setObjectName("Files")
         fileListWidget = QtWidgets.QWidget()
         fileListWidget.setLayout(fileListLayout)
@@ -195,15 +195,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
         features = QtWidgets.QDockWidget.DockWidgetFeatures()
         for dock in ["flag_dock", "label_dock", "shape_dock", "file_dock"]:
-            if self._config[dock]["closable"]:
-                features = features | QtWidgets.QDockWidget.DockWidgetClosable
-            if self._config[dock]["floatable"]:
-                features = features | QtWidgets.QDockWidget.DockWidgetFloatable
-            if self._config[dock]["movable"]:
-                features = features | QtWidgets.QDockWidget.DockWidgetMovable
-            getattr(self, dock).setFeatures(features)
-            if self._config[dock]["show"] is False:
+            if dock == "flag_dock":
+                # Hide the flag_dock widget, by longxinchen
                 getattr(self, dock).setVisible(False)
+            else:
+                if self._config[dock]["closable"]:
+                    features = features | QtWidgets.QDockWidget.DockWidgetClosable
+                if self._config[dock]["floatable"]:
+                    features = features | QtWidgets.QDockWidget.DockWidgetFloatable
+                if self._config[dock]["movable"]:
+                    features = features | QtWidgets.QDockWidget.DockWidgetMovable
+                getattr(self, dock).setFeatures(features)
+                if self._config[dock]["show"] is False:
+                    getattr(self, dock).setVisible(False)
 
         self.addDockWidget(Qt.RightDockWidgetArea, self.flag_dock)
         self.addDockWidget(Qt.RightDockWidgetArea, self.label_dock)
@@ -214,28 +218,28 @@ class MainWindow(QtWidgets.QMainWindow):
         action = functools.partial(utils.newAction, self)
         shortcuts = self._config["shortcuts"]
         quit = action(
-            self.tr("&Quit"),
+            "退出clx",
             self.close,
             shortcuts["quit"],
             "quit",
             self.tr("Quit application"),
         )
         open_ = action(
-            self.tr("&Open"),
+            "打开clx",
             self.openFile,
             shortcuts["open"],
             "open",
             self.tr("Open image or label file"),
         )
         opendir = action(
-            self.tr("&Open Dir"),
+            "打开目录clx",
             self.openDirDialog,
             shortcuts["open_dir"],
             "open",
             self.tr("Open Dir"),
         )
         openNextImg = action(
-            self.tr("&Next Image"),
+            "下一张clx",
             self.openNextImg,
             shortcuts["open_next"],
             "next",
@@ -243,7 +247,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         openPrevImg = action(
-            self.tr("&Prev Image"),
+            "上一张clx",
             self.openPrevImg,
             shortcuts["open_prev"],
             "prev",
@@ -251,7 +255,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         save = action(
-            self.tr("&Save"),
+            "保存clx",
             self.saveFile,
             shortcuts["save"],
             "save",
@@ -259,7 +263,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         saveAs = action(
-            self.tr("&Save As"),
+            "另存为clx",
             self.saveFileAs,
             shortcuts["save_as"],
             "save-as",
@@ -268,7 +272,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         deleteFile = action(
-            self.tr("&Delete File"),
+            "删除标签文件clx",
             self.deleteFile,
             shortcuts["delete_file"],
             "delete",
@@ -277,7 +281,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         changeOutputDir = action(
-            self.tr("&Change Output Dir"),
+            "改变自动保存目录clx",
             slot=self.changeOutputDirDialog,
             shortcut=shortcuts["save_to"],
             icon="open",
@@ -285,7 +289,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         saveAuto = action(
-            text=self.tr("Save &Automatically"),
+            "自动保存clx",
             slot=lambda x: self.actions.saveAuto.setChecked(x),
             icon="save",
             tip=self.tr("Save automatically"),
@@ -295,7 +299,7 @@ class MainWindow(QtWidgets.QMainWindow):
         saveAuto.setChecked(self._config["auto_save"])
 
         saveWithImageData = action(
-            text="Save With Image Data",
+            text="一并保存图片信息（base64加密处理）clx",
             slot=self.enableSaveImageWithData,
             tip="Save image data in label file",
             checkable=True,
@@ -303,7 +307,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         close = action(
-            "&Close",
+            "关闭图片clx",
             self.closeFile,
             shortcuts["close"],
             "close",
@@ -321,7 +325,7 @@ class MainWindow(QtWidgets.QMainWindow):
         toggle_keep_prev_mode.setChecked(self._config["keep_prev"])
 
         createMode = action(
-            self.tr("Create Polygons"),
+            "创建多边形clx",
             lambda: self.toggleDrawMode(False, createMode="polygon"),
             shortcuts["create_polygon"],
             "objects",
@@ -329,7 +333,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createRectangleMode = action(
-            self.tr("Create Rectangle"),
+            "创建矩形clx",
             lambda: self.toggleDrawMode(False, createMode="rectangle"),
             shortcuts["create_rectangle"],
             "objects",
@@ -337,7 +341,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createCircleMode = action(
-            self.tr("Create Circle"),
+            "创建圆形clx",
             lambda: self.toggleDrawMode(False, createMode="circle"),
             shortcuts["create_circle"],
             "objects",
@@ -345,7 +349,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createLineMode = action(
-            self.tr("Create Line"),
+            "创建直线clx",
             lambda: self.toggleDrawMode(False, createMode="line"),
             shortcuts["create_line"],
             "objects",
@@ -353,7 +357,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createPointMode = action(
-            self.tr("Create Point"),
+            "创建点clx",
             lambda: self.toggleDrawMode(False, createMode="point"),
             shortcuts["create_point"],
             "objects",
@@ -361,7 +365,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createLineStripMode = action(
-            self.tr("Create LineStrip"),
+            "创建折线clx",
             lambda: self.toggleDrawMode(False, createMode="linestrip"),
             shortcuts["create_linestrip"],
             "objects",
@@ -377,7 +381,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         editMode = action(
-            self.tr("Edit Polygons"),
+            "编辑多边形clx",
             self.setEditMode,
             shortcuts["edit_polygon"],
             "edit",
@@ -386,7 +390,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         delete = action(
-            self.tr("Delete Polygons"),
+            "删除多边形clx",
             self.deleteSelectedShape,
             shortcuts["delete_polygon"],
             "cancel",
@@ -394,7 +398,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         duplicate = action(
-            self.tr("Duplicate Polygons"),
+            "创建同样多边形clx",
             self.duplicateSelectedShape,
             shortcuts["duplicate_polygon"],
             "copy",
@@ -402,7 +406,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         copy = action(
-            self.tr("Copy Polygons"),
+            "复制多边形clx",
             self.copySelectedShape,
             shortcuts["copy_polygon"],
             "copy_clipboard",
@@ -410,7 +414,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         paste = action(
-            self.tr("Paste Polygons"),
+            "粘贴多边形clx（原位置粘贴）",
             self.pasteSelectedShape,
             shortcuts["paste_polygon"],
             "paste",
@@ -435,7 +439,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         undo = action(
-            self.tr("Undo"),
+            "撤销clx",
             self.undoShapeEdit,
             shortcuts["undo"],
             "undo",
@@ -444,31 +448,31 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         hideAll = action(
-            self.tr("&Hide\nPolygons"),
+            "&隐藏所有多边形clx",
             functools.partial(self.togglePolygons, False),
             icon="eye",
             tip=self.tr("Hide all polygons"),
             enabled=False,
         )
         showAll = action(
-            self.tr("&Show\nPolygons"),
+            "显示所有多边形clx",
             functools.partial(self.togglePolygons, True),
             icon="eye",
             tip=self.tr("Show all polygons"),
             enabled=False,
         )
 
-        help = action(
-            self.tr("&Tutorial"),
-            self.tutorial,
-            icon="help",
-            tip=self.tr("Show tutorial page"),
-        )
+        # help = action(
+        #     self.tr("&Tutorial"),
+        #     self.tutorial,
+        #     icon="help",
+        #     tip=self.tr("Show tutorial page"),
+        # )
 
         zoom = QtWidgets.QWidgetAction(self)
         zoomBoxLayout = QtWidgets.QVBoxLayout()
         zoomBoxLayout.addWidget(self.zoomWidget)
-        zoomLabel = QtWidgets.QLabel("Zoom")
+        zoomLabel = QtWidgets.QLabel("放大比例")
         zoomLabel.setAlignment(Qt.AlignCenter)
         zoomLabel.setFont(QtGui.QFont(None, 10))
         zoomBoxLayout.addWidget(zoomLabel)
@@ -490,7 +494,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.zoomWidget.setEnabled(False)
 
         zoomIn = action(
-            self.tr("Zoom &In"),
+            "缩小图片clx",
             functools.partial(self.addZoom, 1.1),
             shortcuts["zoom_in"],
             "zoom-in",
@@ -498,7 +502,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         zoomOut = action(
-            self.tr("&Zoom Out"),
+            "放大图片clx",
             functools.partial(self.addZoom, 0.9),
             shortcuts["zoom_out"],
             "zoom-out",
@@ -506,7 +510,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         zoomOrg = action(
-            self.tr("&Original size"),
+            "原始大小clx",
             functools.partial(self.setZoom, 100),
             shortcuts["zoom_to_original"],
             "zoom",
@@ -522,7 +526,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=True,
         )
         fitWindow = action(
-            self.tr("&Fit Window"),
+            "适应窗口clx",
             self.setFitWindow,
             shortcuts["fit_window"],
             "fit-window",
@@ -531,7 +535,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         fitWidth = action(
-            self.tr("Fit &Width"),
+            "适应宽度clx",
             self.setFitWidth,
             shortcuts["fit_width"],
             "fit-width",
@@ -540,7 +544,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         brightnessContrast = action(
-            "&Brightness Contrast",
+            "明亮度和对比度设置clx",
             self.brightnessContrast,
             None,
             "color",
@@ -566,7 +570,7 @@ class MainWindow(QtWidgets.QMainWindow):
         }
 
         edit = action(
-            self.tr("&Edit Label"),
+            "编辑标签clx",
             self.editLabel,
             shortcuts["edit_label"],
             "edit",
@@ -641,11 +645,11 @@ class MainWindow(QtWidgets.QMainWindow):
                 delete,
                 None,
                 undo,
-                undoLastPoint,
+                # undoLastPoint,
                 None,
-                removePoint,
+                # removePoint,
                 None,
-                toggle_keep_prev_mode,
+                # toggle_keep_prev_mode,
             ),
             # menu shown at right click
             menu=(
@@ -653,9 +657,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 createRectangleMode,
                 createCircleMode,
                 createLineMode,
-                createPointMode,
+                # createPointMode,
                 createLineStripMode,
-                createAiPolygonMode,
+                # createAiPolygonMode,
                 editMode,
                 edit,
                 duplicate,
@@ -674,7 +678,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 createLineMode,
                 createPointMode,
                 createLineStripMode,
-                createAiPolygonMode,
+                # createAiPolygonMode,
                 editMode,
                 brightnessContrast,
             ),
@@ -684,11 +688,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas.vertexSelected.connect(self.actions.removePoint.setEnabled)
 
         self.menus = utils.struct(
-            file=self.menu(self.tr("&File")),
-            edit=self.menu(self.tr("&Edit")),
-            view=self.menu(self.tr("&View")),
-            help=self.menu(self.tr("&Help")),
-            recentFiles=QtWidgets.QMenu(self.tr("Open &Recent")),
+            file=self.menu("&文件clx"),
+            edit=self.menu("&编辑clx"),
+            view=self.menu("&视图clx"),
+            # help=self.menu(self.tr("&Help")),
+            recentFiles=QtWidgets.QMenu("最近打开clx"),
             labelList=labelMenu,
         )
 
@@ -711,7 +715,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 quit,
             ),
         )
-        utils.addActions(self.menus.help, (help,))
+        # utils.addActions(self.menus.help, (help,))
         utils.addActions(
             self.menus.view,
             (
@@ -720,7 +724,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.shape_dock.toggleViewAction(),
                 self.file_dock.toggleViewAction(),
                 None,
-                fill_drawing,
+                # fill_drawing,
                 None,
                 hideAll,
                 showAll,
@@ -728,7 +732,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 zoomIn,
                 zoomOut,
                 zoomOrg,
-                keepPrevScale,
+                # keepPrevScale,
                 None,
                 fitWindow,
                 fitWidth,
@@ -790,7 +794,7 @@ class MainWindow(QtWidgets.QMainWindow):
             zoom,
             fitWidth,
             None,
-            selectAiModel,
+            # selectAiModel,
         )
 
         self.statusBar().showMessage(str(self.tr("%s started.")) % __appname__)
@@ -893,7 +897,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.actions.createLineMode,
             self.actions.createPointMode,
             self.actions.createLineStripMode,
-            self.actions.createAiPolygonMode,
+            # self.actions.createAiPolygonMode,
             self.actions.editMode,
         )
         utils.addActions(self.menus.edit, actions + self.actions.editMenu)
