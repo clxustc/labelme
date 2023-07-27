@@ -113,7 +113,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lastOpenDir = None
 
         self.flag_dock = self.flag_widget = None
-        self.flag_dock = QtWidgets.QDockWidget(self.tr("Flags"), self)
+        self.flag_dock = QtWidgets.QDockWidget("图片类别clx", self)
         self.flag_dock.setObjectName("Flags")
         self.flag_widget = QtWidgets.QListWidget()
         if config["flags"]:
@@ -195,19 +195,15 @@ class MainWindow(QtWidgets.QMainWindow):
 
         features = QtWidgets.QDockWidget.DockWidgetFeatures()
         for dock in ["flag_dock", "label_dock", "shape_dock", "file_dock"]:
-            if dock == "flag_dock":
-                # Hide the flag_dock widget, by longxinchen
+            if self._config[dock]["closable"]:
+                features = features | QtWidgets.QDockWidget.DockWidgetClosable
+            if self._config[dock]["floatable"]:
+                features = features | QtWidgets.QDockWidget.DockWidgetFloatable
+            if self._config[dock]["movable"]:
+                features = features | QtWidgets.QDockWidget.DockWidgetMovable
+            getattr(self, dock).setFeatures(features)
+            if self._config[dock]["show"] is False:
                 getattr(self, dock).setVisible(False)
-            else:
-                if self._config[dock]["closable"]:
-                    features = features | QtWidgets.QDockWidget.DockWidgetClosable
-                if self._config[dock]["floatable"]:
-                    features = features | QtWidgets.QDockWidget.DockWidgetFloatable
-                if self._config[dock]["movable"]:
-                    features = features | QtWidgets.QDockWidget.DockWidgetMovable
-                getattr(self, dock).setFeatures(features)
-                if self._config[dock]["show"] is False:
-                    getattr(self, dock).setVisible(False)
 
         self.addDockWidget(Qt.RightDockWidgetArea, self.flag_dock)
         self.addDockWidget(Qt.RightDockWidgetArea, self.label_dock)
