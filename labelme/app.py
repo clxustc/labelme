@@ -113,7 +113,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lastOpenDir = None
 
         self.flag_dock = self.flag_widget = None
-        self.flag_dock = QtWidgets.QDockWidget("图片类别clx", self)
+        self.flag_dock = QtWidgets.QDockWidget("图片类别", self)
         self.flag_dock.setObjectName("Flags")
         self.flag_widget = QtWidgets.QListWidget()
         if config["flags"]:
@@ -126,7 +126,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.labelList.itemChanged.connect(self.labelItemChanged)
         self.labelList.itemDropped.connect(self.labelOrderChanged)
         self.shape_dock = QtWidgets.QDockWidget(
-            "多边形标签clx", self
+            "多边形标签", self
         )
         self.shape_dock.setObjectName("Labels")
         self.shape_dock.setWidget(self.labelList)
@@ -144,12 +144,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.uniqLabelList.addItem(item)
                 rgb = self._get_rgb_by_label(label)
                 self.uniqLabelList.setItemLabel(item, label, rgb)
-        self.label_dock = QtWidgets.QDockWidget("标签列表clx", self)
+        self.label_dock = QtWidgets.QDockWidget("标签列表", self)
         self.label_dock.setObjectName("Label List")
         self.label_dock.setWidget(self.uniqLabelList)
 
         self.fileSearch = QtWidgets.QLineEdit()
-        self.fileSearch.setPlaceholderText("按文件名检索clx")
+        self.fileSearch.setPlaceholderText("按文件名检索")
         self.fileSearch.textChanged.connect(self.fileSearchChanged)
         self.fileListWidget = QtWidgets.QListWidget()
         self.fileListWidget.itemSelectionChanged.connect(
@@ -160,7 +160,7 @@ class MainWindow(QtWidgets.QMainWindow):
         fileListLayout.setSpacing(0)
         fileListLayout.addWidget(self.fileSearch)
         fileListLayout.addWidget(self.fileListWidget)
-        self.file_dock = QtWidgets.QDockWidget("文件列表clx", self)
+        self.file_dock = QtWidgets.QDockWidget("文件列表", self)
         self.file_dock.setObjectName("Files")
         fileListWidget = QtWidgets.QWidget()
         fileListWidget.setLayout(fileListLayout)
@@ -214,28 +214,28 @@ class MainWindow(QtWidgets.QMainWindow):
         action = functools.partial(utils.newAction, self)
         shortcuts = self._config["shortcuts"]
         quit = action(
-            "退出clx",
+            "退出",
             self.close,
             shortcuts["quit"],
             "quit",
             self.tr("Quit application"),
         )
         open_ = action(
-            "打开clx",
+            "打开",
             self.openFile,
             shortcuts["open"],
             "open",
             self.tr("Open image or label file"),
         )
         opendir = action(
-            "打开目录clx",
+            "打开目录",
             self.openDirDialog,
             shortcuts["open_dir"],
             "open",
             self.tr("Open Dir"),
         )
         openNextImg = action(
-            "下一张clx",
+            "下一张",
             self.openNextImg,
             shortcuts["open_next"],
             "next",
@@ -243,7 +243,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         openPrevImg = action(
-            "上一张clx",
+            "上一张",
             self.openPrevImg,
             shortcuts["open_prev"],
             "prev",
@@ -251,7 +251,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         save = action(
-            "保存clx",
+            "保存",
             self.saveFile,
             shortcuts["save"],
             "save",
@@ -259,7 +259,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         saveAs = action(
-            "另存为clx",
+            "另存为",
             self.saveFileAs,
             shortcuts["save_as"],
             "save-as",
@@ -268,7 +268,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         deleteFile = action(
-            "删除标签文件clx",
+            "删除标签文件",
             self.deleteFile,
             shortcuts["delete_file"],
             "delete",
@@ -277,7 +277,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         changeOutputDir = action(
-            "改变自动保存目录clx",
+            "改变自动保存目录",
             slot=self.changeOutputDirDialog,
             shortcut=shortcuts["save_to"],
             icon="open",
@@ -285,7 +285,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         saveAuto = action(
-            "自动保存clx",
+            "自动保存",
             slot=lambda x: self.actions.saveAuto.setChecked(x),
             icon="save",
             tip=self.tr("Save automatically"),
@@ -295,7 +295,7 @@ class MainWindow(QtWidgets.QMainWindow):
         saveAuto.setChecked(self._config["auto_save"])
 
         saveWithImageData = action(
-            text="一并保存图片信息（base64加密处理）clx",
+            text="一并保存图片信息（base64加密处理）",
             slot=self.enableSaveImageWithData,
             tip="Save image data in label file",
             checkable=True,
@@ -303,7 +303,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         close = action(
-            "关闭图片clx",
+            "关闭图片",
             self.closeFile,
             shortcuts["close"],
             "close",
@@ -321,7 +321,7 @@ class MainWindow(QtWidgets.QMainWindow):
         toggle_keep_prev_mode.setChecked(self._config["keep_prev"])
 
         createMode = action(
-            "创建多边形clx",
+            "创建多边形",
             lambda: self.toggleDrawMode(False, createMode="polygon"),
             shortcuts["create_polygon"],
             "objects",
@@ -329,7 +329,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createRectangleMode = action(
-            "创建矩形clx",
+            "创建矩形",
             lambda: self.toggleDrawMode(False, createMode="rectangle"),
             shortcuts["create_rectangle"],
             "objects",
@@ -337,7 +337,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createCircleMode = action(
-            "创建圆形clx",
+            "创建圆形",
             lambda: self.toggleDrawMode(False, createMode="circle"),
             shortcuts["create_circle"],
             "objects",
@@ -345,7 +345,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createLineMode = action(
-            "创建直线clx",
+            "创建直线",
             lambda: self.toggleDrawMode(False, createMode="line"),
             shortcuts["create_line"],
             "objects",
@@ -353,7 +353,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createPointMode = action(
-            "创建点clx",
+            "创建点",
             lambda: self.toggleDrawMode(False, createMode="point"),
             shortcuts["create_point"],
             "objects",
@@ -361,7 +361,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         createLineStripMode = action(
-            "创建折线clx",
+            "创建折线",
             lambda: self.toggleDrawMode(False, createMode="linestrip"),
             shortcuts["create_linestrip"],
             "objects",
@@ -377,7 +377,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         editMode = action(
-            "编辑多边形clx",
+            "编辑多边形",
             self.setEditMode,
             shortcuts["edit_polygon"],
             "edit",
@@ -386,7 +386,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         delete = action(
-            "删除多边形clx",
+            "删除多边形",
             self.deleteSelectedShape,
             shortcuts["delete_polygon"],
             "cancel",
@@ -394,7 +394,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         duplicate = action(
-            "创建同样多边形clx",
+            "创建同样多边形",
             self.duplicateSelectedShape,
             shortcuts["duplicate_polygon"],
             "copy",
@@ -402,7 +402,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         copy = action(
-            "复制多边形clx",
+            "复制多边形",
             self.copySelectedShape,
             shortcuts["copy_polygon"],
             "copy_clipboard",
@@ -410,7 +410,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         paste = action(
-            "粘贴多边形clx（原位置粘贴）",
+            "粘贴多边形（原位置粘贴）",
             self.pasteSelectedShape,
             shortcuts["paste_polygon"],
             "paste",
@@ -435,7 +435,7 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         undo = action(
-            "撤销clx",
+            "撤销",
             self.undoShapeEdit,
             shortcuts["undo"],
             "undo",
@@ -444,14 +444,14 @@ class MainWindow(QtWidgets.QMainWindow):
         )
 
         hideAll = action(
-            "&隐藏所有多边形clx",
+            "&隐藏所有多边形",
             functools.partial(self.togglePolygons, False),
             icon="eye",
             tip=self.tr("Hide all polygons"),
             enabled=False,
         )
         showAll = action(
-            "显示所有多边形clx",
+            "显示所有多边形",
             functools.partial(self.togglePolygons, True),
             icon="eye",
             tip=self.tr("Show all polygons"),
@@ -490,7 +490,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.zoomWidget.setEnabled(False)
 
         zoomIn = action(
-            "缩小图片clx",
+            "缩小图片",
             functools.partial(self.addZoom, 1.1),
             shortcuts["zoom_in"],
             "zoom-in",
@@ -498,7 +498,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         zoomOut = action(
-            "放大图片clx",
+            "放大图片",
             functools.partial(self.addZoom, 0.9),
             shortcuts["zoom_out"],
             "zoom-out",
@@ -506,7 +506,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         zoomOrg = action(
-            "原始大小clx",
+            "原始大小",
             functools.partial(self.setZoom, 100),
             shortcuts["zoom_to_original"],
             "zoom",
@@ -522,7 +522,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=True,
         )
         fitWindow = action(
-            "适应窗口clx",
+            "适应窗口",
             self.setFitWindow,
             shortcuts["fit_window"],
             "fit-window",
@@ -531,7 +531,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         fitWidth = action(
-            "适应宽度clx",
+            "适应宽度",
             self.setFitWidth,
             shortcuts["fit_width"],
             "fit-width",
@@ -540,7 +540,7 @@ class MainWindow(QtWidgets.QMainWindow):
             enabled=False,
         )
         brightnessContrast = action(
-            "明亮度和对比度设置clx",
+            "明亮度和对比度设置",
             self.brightnessContrast,
             None,
             "color",
@@ -566,7 +566,7 @@ class MainWindow(QtWidgets.QMainWindow):
         }
 
         edit = action(
-            "编辑标签clx",
+            "编辑标签",
             self.editLabel,
             shortcuts["edit_label"],
             "edit",
@@ -684,11 +684,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.canvas.vertexSelected.connect(self.actions.removePoint.setEnabled)
 
         self.menus = utils.struct(
-            file=self.menu("&文件clx"),
-            edit=self.menu("&编辑clx"),
-            view=self.menu("&视图clx"),
+            file=self.menu("&文件"),
+            edit=self.menu("&编辑"),
+            view=self.menu("&视图"),
             # help=self.menu(self.tr("&Help")),
-            recentFiles=QtWidgets.QMenu("最近打开clx"),
+            recentFiles=QtWidgets.QMenu("最近打开"),
             labelList=labelMenu,
         )
 
